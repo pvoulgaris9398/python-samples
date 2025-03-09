@@ -1,7 +1,5 @@
 # pylint: disable=[missing-module-docstring]
-import pandas as pd
-import yfinance as yf
-from functools import reduce
+import prices
 from pypfopt.expected_returns import mean_historical_return
 from pypfopt.risk_models import CovarianceShrinkage
 from pypfopt.efficient_frontier import EfficientFrontier
@@ -12,49 +10,7 @@ from pypfopt.discrete_allocation import DiscreteAllocation, get_latest_prices
 # https://builtin.com/data-science/portfolio-optimization-python
 
 
-# https://algotrading101.com/learn/yfinance-guide/
-# https://pypi.org/project/yfinance/
-def get_stock_price_data(ticker, start, end):
-    dat = yf.Ticker(ticker)
-    data = dat.history(start=start, end=end, auto_adjust=False)
-    data[f"{ticker}"] = data["Close"]
-    data = data[[f"{ticker}"]]
-    return data
-
-
-def combine_stocks(tickers, start, end):
-    data_frames = []
-    for i in tickers:
-        data_frames.append(get_stock_price_data(i, start, end))
-
-    df_merged = reduce(
-        lambda left, right: pd.merge(left, right, on=["Date"], how="outer"), data_frames
-    )
-    return df_merged
-
-
-pd.set_option("display.max_columns", None)
-pd.set_option("display.max_rows", None)
-
-start = "2019-09-15"
-end = "2021-09-15"
-
-tickers = [
-    "MRNA",
-    "PFE",
-    "JNJ",
-    "GOOGL",
-    "META",  # "FB"
-    "AAPL",
-    "COST",
-    "WMT",
-    "KR",
-    "JPM",
-    "BAC",
-    "HSBC",
-]
-
-portfolio = combine_stocks(tickers, start, end)
+portfolio = prices.build_portfolio()
 
 # https://pyportfolioopt.readthedocs.io/en/latest/
 mu = mean_historical_return(portfolio)
