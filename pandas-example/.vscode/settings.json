@@ -3,5 +3,8 @@
   "editor.minimap.enabled": false,
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "ms-python.black-formatter",
-  "terminal.integrated.defaultProfile.windows": "Git Bash"
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
