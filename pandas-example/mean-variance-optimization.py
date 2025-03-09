@@ -9,7 +9,7 @@ from pypfopt.discrete_allocation import DiscreteAllocation, get_latest_prices
 # Mean Variance Optimization Example from:
 # https://builtin.com/data-science/portfolio-optimization-python
 
-
+# Build portfolio
 portfolio = prices.build_portfolio()
 
 # https://pyportfolioopt.readthedocs.io/en/latest/

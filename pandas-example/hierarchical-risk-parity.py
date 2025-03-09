@@ -7,6 +7,7 @@ from pypfopt import HRPOpt
 # Hierarchical Risk Party (HRP) Example from:
 # https://builtin.com/data-science/portfolio-optimization-python
 
+# Build portfolio
 portfolio = prices.build_portfolio()
 
 returns = portfolio.pct_change().dropna()
@@ -14,6 +15,7 @@ returns = portfolio.pct_change().dropna()
 hrp = HRPOpt(returns)
 
 hrp_weights = hrp.optimize()
+print(dict(hrp_weights))
 
 hrp.portfolio_performance(verbose=True)
 
@@ -23,7 +25,6 @@ da_hrp = DiscreteAllocation(hrp_weights, latest_prices, total_portfolio_value=10
 
 allocation, leftover = da_hrp.greedy_portfolio()
 
-print(dict(hrp_weights))
 
 print("Discrete Allocation:", allocation)
 
