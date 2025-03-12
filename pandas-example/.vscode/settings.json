@@ -1,10 +1,19 @@
 {
-  "window.zoomLevel": 2,
-  "editor.minimap.enabled": false,
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "ms-python.black-formatter",
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports.ruff": "explicit"
+    }
+  },
+  "window.zoomLevel": 2,
   "terminal.integrated.defaultProfile.windows": "Git Bash",
-  "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  "terminal.integrated.shellIntegration.enabled": false,
+  "files.exclude": {
+    "**/bin": true,
+    "**/obj": true,
+    "__pycache__": true
+  },
+  "editor.minimap.autohide": true
 }

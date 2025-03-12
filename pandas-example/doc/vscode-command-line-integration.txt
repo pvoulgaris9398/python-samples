@@ -1,0 +1,1 @@
+Command line: C:\Program Files\Git\usr\bin\bash.exe '--init-file' 'c:\Users\Peter\AppData\Local\Programs\Microsoft VS Code\resources\app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh'
