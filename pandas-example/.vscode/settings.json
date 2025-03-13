@@ -1,5 +1,6 @@
 {
   "editor.formatOnSave": true,
+  "editor.minimap.enabled": false,
   "[python]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "charliermarsh.ruff",
@@ -15,5 +16,6 @@
     "**/obj": true,
     "__pycache__": true
   },
+"python.experiments.optOutFrom": ["pythonTerminalEnvVarActivation"],
   "editor.minimap.autohide": true
 }
