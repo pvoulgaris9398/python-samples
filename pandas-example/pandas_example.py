@@ -1,5 +1,9 @@
 # pylint: disable=[missing-module-docstring]
+from functools import reduce
+
 import pandas as pd
+
+import prices
 
 data = {"name": ["bread", "carrots", "apples"], "price": [101, 202, 303]}
 

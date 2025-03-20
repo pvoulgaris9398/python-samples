@@ -1,7 +1,9 @@
-import config
-import yfinance as yf
-import pandas as pd
 from functools import reduce
+
+import pandas as pd
+import yfinance as yf
+
+import config
 
 pd.set_option("display.max_columns", None)
 pd.set_option("display.max_rows", None)

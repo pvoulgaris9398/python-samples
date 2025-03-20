@@ -1,5 +1,21 @@
 # Notes
 
+## `Thursday, 3/20/25`
+
+- [conda](https://docs.conda.io/projects/conda/en/stable/index.html)
+- [conda-forge](https://conda-forge.org/)
+
+```bash
+conda config --add channels conda-forge
+```
+
+- `C:/Users/Peter/.condarc` vs `C:/Users/Peter/miniconda3/.condarc`
+- [pip](https://pip.pypa.io/en/stable/getting-started/)
+- [dash](https://dash.plotly.com/)
+- [dash-bootstrap-components](https://dash-bootstrap-components.opensource.faculty.ai/)
+- [PyPortfolioOpt](https://pyportfolioopt.readthedocs.io/en/latest/)
+- [openbb](https://openbb.co/)
+
 ## `Sunday, 3/16/25`
 
 - Using `conda` environment manager on my new laptop...

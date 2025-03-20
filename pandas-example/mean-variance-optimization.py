@@ -1,9 +1,13 @@
 # pylint: disable=[missing-module-docstring]
-import prices
-from pypfopt.expected_returns import mean_historical_return
-from pypfopt.risk_models import CovarianceShrinkage
-from pypfopt.efficient_frontier import EfficientFrontier
 from pypfopt.discrete_allocation import DiscreteAllocation, get_latest_prices
+from pypfopt.efficient_frontier import EfficientFrontier
+from pypfopt.expected_returns import mean_historical_return
+
+# rom pypfopt.risk_models import CovarianceShrinkage
+from sklearn.covariance import EmpiricalCovariance
+
+# from sklearn.covariance import EmpiricalCovariance
+import prices
 
 # Working through:
 # Mean Variance Optimization Example from:
@@ -16,9 +20,14 @@ portfolio = prices.build_portfolio()
 mu = mean_historical_return(portfolio)
 
 # https://scikit-learn.org/stable/
-S = CovarianceShrinkage(portfolio).ledoit_wolf()
+# S = CovarianceShrinkage(portfolio).ledoit_wolf()
+
+S = EmpiricalCovariance(portfolio)
 
 ef = EfficientFrontier(mu, S)
+
+ef.add_constraint(lambda x: x[0] == 0.02)
+
 weights = ef.max_sharpe()
 
 cleaned_weights = ef.clean_weights()

@@ -156,4 +156,4 @@ def update_graphs(n_clicks, tickers, n_components, start_date, end_date):
 
 if __name__ == "__main__":
     # Run the Dash app
-    app.run_server(debug=True)
+    app.run(debug=True)

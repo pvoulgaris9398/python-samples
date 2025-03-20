@@ -1,13 +1,12 @@
 # pylint: disable=[missing-module-docstring]
+from pypfopt.discrete_allocation import DiscreteAllocation, get_latest_prices
+from pypfopt.efficient_frontier import EfficientCVaR
+from pypfopt.expected_returns import mean_historical_return
+
 import prices
 
-from pypfopt.expected_returns import mean_historical_return
-from pypfopt.efficient_frontier import EfficientCVaR
-from pypfopt.discrete_allocation import DiscreteAllocation, get_latest_prices
-from pypfopt import HRPOpt
-
 # Working through:
-# Hierarchical Risk Party (HRP) Example from:
+# Mean Conditional Value at Risk Example from:
 # https://builtin.com/data-science/portfolio-optimization-python
 
 portfolio = prices.build_portfolio()
@@ -19,8 +18,6 @@ ef_cvar = EfficientCVaR(mu, S)
 cvar_weights = ef_cvar.min_cvar()
 
 cleaned_weights = ef_cvar.clean_weights()
-
-print(dict(cleaned_weights))
 
 # ef_cvar.portfolio_performance(verbose=True)
 
