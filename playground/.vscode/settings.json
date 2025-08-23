@@ -17,5 +17,5 @@
     "__pycache__": true
   },
 "python.experiments.optOutFrom": ["pythonTerminalEnvVarActivation"],
-  "editor.minimap.autohide": true
+  "editor.minimap.autohide": "mouseover"
 }
