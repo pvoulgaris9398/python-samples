@@ -1,12 +1,17 @@
 {
   "editor.formatOnSave": true,
   "editor.minimap.enabled": false,
+  "python.languageServer": "Pylance",
+  "python.autoComplete.extraPaths": [
+    "${workspaceFolder}",
+    "~/miniconda3/envs/quant-dev01/Lib/site-packages/PyQt6"
+  ],
   "[python]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.codeActionsOnSave": {
       "source.organizeImports.ruff": "explicit"
-    }
+    },
   },
   "window.zoomLevel": 2,
   "terminal.integrated.defaultProfile.windows": "Git Bash",
