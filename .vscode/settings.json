@@ -16,6 +16,8 @@
     "**/obj": true,
     "__pycache__": true
   },
-"python.experiments.optOutFrom": ["pythonTerminalEnvVarActivation"],
+  "python.experiments.optOutFrom": [
+    "pythonTerminalEnvVarActivation"
+  ],
   "editor.minimap.autohide": "mouseover"
 }

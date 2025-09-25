@@ -13,5 +13,9 @@ ds2 = set([tuple(values) for values in df2.values.tolist()])
 
 ds1.symmetric_difference(df2)
 
-print(pd.DataFrame(list(ds1.difference(ds2))))
-print(pd.DataFrame(list(ds2.difference(ds1))))
+# print(pd.DataFrame(list(ds1.difference(ds2))))
+# print(pd.DataFrame(list(ds2.difference(ds1))))
+
+print(df1.describe())
+
+print(df1.info())

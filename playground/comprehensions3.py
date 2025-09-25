@@ -1,4 +1,5 @@
 fruit = ["apple", "oranges", "grapes", "pear", "watermelon", "pineapple"]
+
 lengths = [len(f) for f in fruit]
 
 print(fruit)
@@ -37,6 +38,8 @@ print("Numbers Generator", numbersGenerator)
 
 try:
     numbers = [n for n in numbersGenerator]
+
     print("Numbers: ", numbers)
+
 except ZeroDivisionError:
     print("Error!")
