@@ -1,5 +1,25 @@
 # Notes
 
+## `Thursday, 9/25/25`
+
+- After installing `PyQt6` in my virtual directory (`conda activate quant-dev01`)
+- I was still not seeing intellisense work, although I could run the sample program
+- Turns out I needed to run `conda activate quant-dev01` and *then* run vscode
+- Rather than running vscode, _then_ running `conda activate quant-dev01` from within `vscode`'s integrated terminal
+
+[1](2025-09-25-01.jpg)
+
+- I did *NOT* need the following entry to get this to work:
+
+```json
+"python.autoComplete.extraPaths": [
+    "${workspaceFolder}",
+    "~/miniconda3/envs/quant-dev01/Lib/site-packages/PyQt6"
+  ],
+```
+
+
+
 ## `Thursday, 3/20/25`
 
 - [conda](https://docs.conda.io/projects/conda/en/stable/index.html)

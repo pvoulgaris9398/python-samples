@@ -2,7 +2,7 @@ import sys
 
 # For some reason, although I definitely installed PyQt6
 # the intellisense _does not work_
-from PyQt6.QtWidgets import (  # type: ignore
+from PyQt6.QtWidgets import (
     QApplication,
     QHBoxLayout,
     QPushButton,
