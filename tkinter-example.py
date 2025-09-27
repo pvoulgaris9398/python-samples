@@ -4,11 +4,12 @@ counter = 0
 
 root = tk.Tk()
 root.title("Python TKinter Test App")
-root.geometry("400x300")
+root.geometry("600x400")
 
-label = tk.Label(root, text="Welcome")
-# label.pack(pady=10)
-label.grid()
+frame = tk.Frame(root)
+frame.grid()
+
+label = tk.Label(frame, text="Welcome", width=20).grid(column=0, row=0)
 
 
 def on_button_click():
@@ -17,9 +18,11 @@ def on_button_click():
     label.config(text=f"Button was clicked: {counter} times")
 
 
-button = tk.Button(root, text="Press Me", command=on_button_click)
-# button.pack(pady=10)
-button.grid(column=1, row=0)
+tk.Button(root, text="Click Me!", command=on_button_click, width=20).grid(
+    column=1, row=0
+)
+
+tk.Button(root, text="Quit", command=root.destroy, width=20).grid(column=2, row=0)
 
 
 def main():
