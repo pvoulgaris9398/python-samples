@@ -15,7 +15,7 @@ def is_palindrome(s: str) -> bool:
 
 
 """
-Using generalized version of "two-pointer" algorith
+Using generalized version of "two-pointer" algorithm
 """
 
 
@@ -36,7 +36,7 @@ def is_palindrome_2(s: str) -> bool:
 
 
 """
-Generalized version the algorithm
+Generalized version(s) the algorithm
 """
 
 
