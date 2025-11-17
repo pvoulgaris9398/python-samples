@@ -72,3 +72,17 @@ def dfs(grid, row, column, visited):
         if neighbor in visited:
             continue
         dfs(grid, neighbor[0], neighbor[1], visited)
+
+
+"""
+WIP
+Depth-First Search Example
+"""
+
+
+def main():
+    print("Depth-First Search Example")
+
+
+if __name__ == "__main__":
+    main()
