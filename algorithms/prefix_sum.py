@@ -17,7 +17,7 @@ def build_prefix_sum_array(array: list[int]):
 
 
 """
-Test bounds/handing of the function
+Test bounds/handling of the function
 """
 
 
