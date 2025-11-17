@@ -6,7 +6,7 @@ class Solution:
         # While window is valid move over "R"
         # While window is invalid move over "L"
         # Length = (left - right) + 1
-        # Note at begining, left = 0, right = 0
+        # Note at beginning, left = 0, right = 0
         # So, length = (0 - 0) + 1 = 1
         left = 0
         longest = 0
