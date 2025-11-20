@@ -1,5 +1,16 @@
 # Notes
 
+## `Thursday, 11/20/25`
+
+### `To Do`:
+
+- Review:
+  - [pandas](https://pandas.pydata.org/)
+  - [numpy](https://numpy.org/)
+  - [scikit-learn](https://scikit-learn.org/stable/)
+  - [scipy](https://scipy.org/)
+  - [cvxpy](https://www.cvxpy.org/)
+
 ## `Thursday, 9/25/25`
 
 - After installing `PyQt6` in my virtual directory (`conda activate quant-dev01`)
