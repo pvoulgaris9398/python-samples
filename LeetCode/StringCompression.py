@@ -21,13 +21,18 @@ class Solution:
         # Process input char by char
         while read_index < array_length:
             # Keep track of length of next group of characters
-            # When this exits char_group_index points to the last character
-            # of a group or to the end of the array
+            # When the loop completes char_group_index points to the last character
+            # of a group or to the end of the array/list
+            # We only use it to index the array/list in the while condition
+            # below which won't execute when it points past the end
             char_group_index = read_index + 1
             while (
                 char_group_index < array_length
                 and chars[char_group_index] == chars[read_index]
             ):
+                # When we are at the last index, char_group_index will point past the end
+                # of the list, but that's OK because that will give us the correct
+                # count below
                 char_group_index += 1
 
             # Write out the current char and increment the write pointer
