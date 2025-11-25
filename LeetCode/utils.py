@@ -23,7 +23,7 @@ def caller_name():
             return "Matches on an empty list."
         case [x]:  # noqa: F841
             # Note, this would not match a list with more than one element or no elements
-            return "Matches on exactly one and only one elemnt and binds the result to the variable 'x'."
+            return "Matches on exactly one and only one element and binds the result to the variable 'x'."
         case [_, _, _, _, _, *_]:
             # Matches on at least three (3) elements (or more)
             return temp[2].function
