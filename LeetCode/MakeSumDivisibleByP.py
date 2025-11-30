@@ -65,6 +65,7 @@ def test1():
     expected = 1
     res, exc = execute_and_log(Solution().Solve, nums, p)
     print(f"Expected: {expected}\tActual: {res}")
+    print()
 
 
 def test2():
@@ -73,6 +74,7 @@ def test2():
     expected = 2
     res, exc = execute_and_log(Solution().Solve, nums, p)
     print(f"Expected: {expected}\tActual: {res}")
+    print()
 
 
 def test3():
@@ -81,6 +83,7 @@ def test3():
     expected = 0
     res, exc = execute_and_log(Solution().Solve, nums, p)
     print(f"Expected: {expected}\tActual: {res}")
+    print()
 
 
 def main():
