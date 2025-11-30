@@ -19,6 +19,8 @@ class Solution:
             if debug:
                 print(remainder_count)
 
+            # Note no special-handling for negative numbers needed with Python
+            # and the modulo operator here
             prefix_sum = (prefix_sum + num) % k
 
             result += remainder_count[prefix_sum]
