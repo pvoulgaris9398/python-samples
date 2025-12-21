@@ -1,0 +1,8 @@
+[tool.ruff]
+
+[tool.ruff.lint]
+select = ["E", "F"]
+ignore = ["F403"]   # for now
+
+[tool.ruff.format]
+quote-style = "double"
