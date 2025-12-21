@@ -14,6 +14,7 @@ label = tk.Label(frame, text="Welcome", width=20).grid(column=0, row=0)
 
 def on_button_click():
     global counter
+    global label
     counter = counter + 1
     label.config(text=f"Button was clicked: {counter} times")
 

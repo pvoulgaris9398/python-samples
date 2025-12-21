@@ -4,6 +4,8 @@
     "ms-python.debugpy",
     "ms-python.black-formatter",
     "ms-python.vscode-pylance",
-    "ms-python.python"
+    "ms-python.python",
+    "nparamonov.cold-python-theme",
+    "esbenp.prettier-vscode"
   ]
 }

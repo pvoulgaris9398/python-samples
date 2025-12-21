@@ -2,12 +2,21 @@
   "editor.formatOnSave": true,
   "editor.minimap.enabled": false,
   "python.languageServer": "Pylance",
+  "workbench.iconTheme": "cold-python-dark-icon-theme",
+  "workbench.productIconTheme": "Default",
+  "[jsonc]": {
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.suggest.insertMode": "replace",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "[python]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.codeActionsOnSave": {
       "source.organizeImports.ruff": "explicit"
-    },
+    }
   },
   "window.zoomLevel": 2,
   "terminal.integrated.defaultProfile.windows": "Git Bash",
@@ -17,8 +26,6 @@
     "**/obj": true,
     "__pycache__": true
   },
-  "python.experiments.optOutFrom": [
-    "pythonTerminalEnvVarActivation"
-  ],
+  "python.experiments.optOutFrom": ["pythonTerminalEnvVarActivation"],
   "editor.minimap.autohide": "mouseover"
 }
