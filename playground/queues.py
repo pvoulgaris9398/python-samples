@@ -4,6 +4,11 @@ class Node:
         self.next: Node | None = None
 
 
+"""
+Queue => FIFO model
+"""
+
+
 class ListBasedQueue:
     def __init__(self):
         self.list = []

@@ -2,6 +2,9 @@
 Stack implementation, with some research/analysis
 on how to implement iterators, etc.
 Current WIP
+
+Stacks => LIFO model
+
 """
 
 
