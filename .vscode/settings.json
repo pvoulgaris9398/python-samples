@@ -1,4 +1,10 @@
 {
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  },
   "editor.formatOnSave": true,
   "editor.minimap.enabled": false,
   "python.languageServer": "Pylance",
@@ -27,5 +33,6 @@
     "__pycache__": true
   },
   "python.experiments.optOutFrom": ["pythonTerminalEnvVarActivation"],
-  "editor.minimap.autohide": "mouseover"
+  "editor.minimap.autohide": "mouseover",
+  "python.REPL.enableREPLSmartSend": false
 }
