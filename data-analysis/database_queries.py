@@ -1,13 +1,21 @@
 import pandas as pd
-import pyodbc as db
+from sqlalchemy import create_engine
 
 
-def get_connection_string(env="dev"):
+def get_connection(env="dev"):
     match env:
         case "prd":
             return "prod-connection-string"
         case "dev":
-            return "dev-connection-string"
+            host = "todo"
+            dbname = "todo"
+            user = "todo"
+            password = "todo"
+            port = 5432
+            return create_engine(
+                f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{dbname}"
+            )
+
         case "stg":
             return "stg-connection-string"
         case "uat":
@@ -19,11 +27,11 @@ def get_connection_string(env="dev"):
         # ETC
 
 
-def test_connection(connection_string):
+def test_connection(connection):
     try:
-        df = pd.read_sql("select @@servername", connection_string)
+        df = pd.read_sql("select version();", connection)
         print(df.to_string(index=False))
-    except db.Error as e:
+    except Exception as e:
         print(f"Error connecting to Database: {e}")
     finally:
         print("Closing connection to Database")
@@ -33,15 +41,15 @@ if __name__ == "__main__":
     import sys
 
     try:
-        connection_string = None
+        connection = None
         match sys.argv:
             case [_, env] if env is not None:
-                connection_string = get_connection_string(env)
+                connection = get_connection(env)
             case _:
                 raise RuntimeError(
                     "Please provide a valid environment name [prd|stg|dev|uat|tst]!"
                 )
-        test_connection(connection_string)
+        test_connection(connection)
 
     except RuntimeError as e:
         print(f"Error: {e}")
