@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 from sqlalchemy import create_engine
 
@@ -7,11 +9,11 @@ def get_connection(env="dev"):
         case "prd":
             return "prod-connection-string"
         case "dev":
-            host = "todo"
-            dbname = "todo"
-            user = "todo"
-            password = "todo"
-            port = 5432
+            host = os.getenv("DBSERVER")
+            dbname = os.getenv("DBNAME")
+            user = os.getenv("DEVUSERNAME")
+            password = os.getenv("DEVUSERPASSWORD")
+            port = os.getenv("DBPORT")
             return create_engine(
                 f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{dbname}"
             )
@@ -39,6 +41,10 @@ def test_connection(connection):
 
 if __name__ == "__main__":
     import sys
+
+    from dotenv import load_dotenv
+
+    load_dotenv()
 
     try:
         connection = None
