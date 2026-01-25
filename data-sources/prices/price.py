@@ -12,4 +12,4 @@ class Price:
         self.exchange = exchange
 
     def __str__(self):
-        return f"{self.symbol}: Open: {self.open} Close: {self.close} Date: {self.price_dt}"  # noqa
+        return f"{self.symbol}: Open: {self.open} High: {self.high} Low: {self.low} Close: {self.close} Volume: {self.volume} Date: {self.price_dt}"  # noqa

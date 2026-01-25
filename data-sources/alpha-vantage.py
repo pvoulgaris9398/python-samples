@@ -43,8 +43,10 @@ To Do:
 - Perhaps return some sort of Optional result
 """
 
+
 def json_to_price(json):
-    
+    pass
+
 
 def get_prices_for(symbol, save=False):
     try:
