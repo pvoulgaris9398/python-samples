@@ -1,19 +1,22 @@
 from __future__ import annotations
 
-import sys
-
+import data_providers
 import pandas as pd
+from pandas.api.types import is_datetime64_any_dtype
 from PyQt6.QtCore import (  # noqa: F401
     QAbstractTableModel,
     QModelIndex,
-    QSize,
     Qt,
     pyqtSignal,
 )
-from PyQt6.QtWidgets import QApplication, QTableView
 
 
-class PandasModel(QAbstractTableModel):
+def create_prices_model():
+    df = data_providers.get_prices()
+    return PricesModel(df)
+
+
+class PricesModel(QAbstractTableModel):
     customDataModified = pyqtSignal(int, int)
 
     def __init__(self, dataframe: pd.DataFrame, parent=None):
@@ -38,7 +41,10 @@ class PandasModel(QAbstractTableModel):
 
         if role == Qt.ItemDataRole.DisplayRole:
             value = self._dataframe.iloc[index.row(), index.column()]
-            return str(value)
+            if is_datetime64_any_dtype(value):
+                return value.strftime("%m/%d/%Y")
+            else:
+                return str(value)
 
         return None
 
@@ -52,21 +58,3 @@ class PandasModel(QAbstractTableModel):
                 return str(self._dataframe.index[section])
 
         return None
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-
-    df = pd.read_csv(r"C:\Users\Peter\_work\_tempdata\titanic.csv")
-
-    view = QTableView()
-    view.setWindowTitle("Pandas DataFrame in QTableView")
-    view.setSizePolicy(
-        view.sizePolicy().horizontalPolicy(), view.sizePolicy().verticalPolicy()
-    )
-    view.setAlternatingRowColors(True)
-    view.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
-    model = PandasModel(df)
-    view.setModel(model)
-    view.show()
-    app.exec()
