@@ -31,7 +31,7 @@ def get_connection(env="dev"):
 
 def test_connection(connection):
     try:
-        df = pd.read_sql("select * from prices;", connection)
+        df = pd.read_sql("select * from pricing.prices;", connection)
         print(df.to_string(index=False))
     except Exception as e:
         print(f"Error connecting to Database: {e}")
