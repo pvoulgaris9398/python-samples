@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import alphavantage as av
 import data_providers
 import pandas as pd
 from pandas.api.types import is_datetime64_any_dtype
@@ -9,6 +10,11 @@ from PyQt6.QtCore import (  # noqa: F401
     Qt,
     pyqtSignal,
 )
+
+
+def create_prices_model2():
+    prices = av.get_prices_for("IBM")
+    av.save_to_database(prices)
 
 
 def create_prices_model():

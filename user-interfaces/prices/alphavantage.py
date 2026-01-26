@@ -1,10 +1,13 @@
 import json
 import os
 
+import connections
 import file_handling as fh
+import json_to_price as jtp
 import pandas as pd
 import requests as req
 from dotenv import load_dotenv
+from sqlalchemy import text
 
 
 def build_request(symbol):
@@ -37,6 +40,15 @@ def save_data(symbol, json_data):
         json_file.write(json.dumps(json_data, indent=4))
 
 
+def save_to_database(prices):
+    with connections.get_connection() as connection:
+        inserts = text(
+            "insert into pricing.prices(symbol, open_price, high_price, low_price, close_price, volume, price_dt) VALUES (:symbol, :open_price, :high_price, :low_price, :close_price, :volume, :price_dt)"  # noqa
+        )  # noqa
+        connection.execute(inserts, prices)
+        connection.commit()
+
+
 """
 To Do:
 - Better error-handling here
@@ -54,6 +66,8 @@ def get_prices_for(symbol, save=False):
 
         if save:
             save_data(symbol, json_data)
+            prices = jtp.parse2(json_data)
+            save_to_database(prices)
         else:
             print(json.dumps(json_data, indent=4))
 
