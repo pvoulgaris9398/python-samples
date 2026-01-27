@@ -1,10 +1,12 @@
 import json
 import os
+import sys
 
 import connections
 import file_handling as fh
 import json_to_price as jtp
 import pandas as pd
+import psycopg2  # noqa
 import requests as req
 from dotenv import load_dotenv
 from sqlalchemy import text
@@ -41,11 +43,15 @@ def save_data(symbol, json_data):
 
 
 def save_to_database(prices):
-    with connections.get_connection() as connection:
+    pt = [p.__dict__ for p in prices]
+    with connections.get_connection().connect() as connection:
+        # Note here we can specify the _names_ of the fields in the dictionary
+        # even though they don't agree with the database column names
         inserts = text(
-            "insert into pricing.prices(symbol, open_price, high_price, low_price, close_price, volume, price_dt) VALUES (:symbol, :open_price, :high_price, :low_price, :close_price, :volume, :price_dt)"  # noqa
+            "insert into pricing.prices(symbol, open_price, high_price, low_price, close_price, volume, price_dt) VALUES (:symbol, :open, :high, :low, :close, :volume, :price_dt)"  # noqa
+            # "insert into pricing.prices(symbol, open_price, high_price, low_price, close_price, volume, price_dt) VALUES (?,?,?,?,?,?,?)"  # noqa
         )  # noqa
-        connection.execute(inserts, prices)
+        connection.execute(inserts, pt)
         connection.commit()
 
 
@@ -56,16 +62,13 @@ To Do:
 """
 
 
-def json_to_price(json):
-    pass
-
-
-def get_prices_for(symbol, save=False):
+def get_prices_for(symbol, saveToFile=False, saveToDatabase=True):
     try:
         json_data = fetch_data(symbol)
 
-        if save:
+        if saveToFile:
             save_data(symbol, json_data)
+        elif saveToDatabase:
             prices = jtp.parse2(json_data)
             save_to_database(prices)
         else:
@@ -82,8 +85,12 @@ def get_prices_for(symbol, save=False):
 if __name__ == "__main__":
     load_dotenv()
 
-    prices = get_prices_for("EV", True)
+    match sys.argv:
+        case [_, symbol]:
+            prices = get_prices_for(symbol, False, True)
 
-    if not prices.empty:
-        pd.set_option("display.max_columns", None)
-        print(prices)
+            # if not prices.empty:
+            #    pd.set_option("display.max_columns", None)
+            #    print(prices)
+        case _:
+            print("Please pass symbol on the command-line")

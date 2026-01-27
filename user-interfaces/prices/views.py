@@ -9,6 +9,6 @@ def create_view(model):
     )
     view.setAlternatingRowColors(True)
     view.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
-    view.resize(600, 400)
+    view.resize(1000, 600)
     view.setModel(model)
     return view

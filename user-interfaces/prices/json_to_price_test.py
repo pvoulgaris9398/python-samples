@@ -35,6 +35,17 @@ json_data = """{
 }"""
 
 
+def test5():
+    list = [
+        prc.Price("A", 1, 2, 3, 4, 5, "1/26/26"),
+        prc.Price("B", 1, 2, 3, 4, 5, "1/25/26"),
+        prc.Price("C", 1, 2, 3, 4, 5, "1/25/26"),
+        prc.Price("D", 1, 2, 3, 4, 5, "1/21/26"),
+    ]
+    temp = [p.__dict__ for p in list]
+    print(temp)
+
+
 def test1(prices):
     group_keys = itemgetter(0, 1)
 
@@ -89,4 +100,4 @@ def test4():
 
 
 if __name__ == "__main__":
-    test4()
+    test5()
