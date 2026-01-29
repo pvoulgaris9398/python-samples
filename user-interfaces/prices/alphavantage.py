@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
     match sys.argv:
         case [_, symbol]:
-            prices = get_prices_for(symbol, False, True)
+            prices = get_prices_for(symbol, saveToFile=False, saveToDatabase=True)
 
             # if not prices.empty:
             #    pd.set_option("display.max_columns", None)
