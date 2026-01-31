@@ -22,6 +22,7 @@ app = Dash(name=__name__, external_stylesheets=external_stylesheets)
 
 app.layout = [
     html.Div(id="log-output"),
+    html.Div(id="clicked-output"),
     html.Div(
         className="row",
         children="Dash Sample with Data",
@@ -36,14 +37,15 @@ app.layout = [
     ),
     dag.AgGrid(
         id="test-grid-001",
+        dashGridOptions={"filter": True},
         rowData=df.to_dict("records"),
         columnDefs=[
             {
                 "headerName": i,
                 "field": i,
                 "id": i,
-                # "headerComponent": "HeaderClickable",
-                # "headerComponentParams": {"enableCallback": True},
+                "headerComponent": "HeaderClickable",
+                "headerComponentParams": {"enableCallback": True},
             }
             for i in df.columns
         ],
@@ -74,13 +76,12 @@ def update_graph(column_chosen):
     return fig
 
 
-"""
 @callback(Output("clicked-output", "children"), Input("test-grid-001", "columnState"))
 def display_header_click(clicked_column):
     if clicked_column:
         return f"Header Clicked: {clicked_column}"
     return "Click a header"
-"""
+
 
 if __name__ == "__main__":
     app.run(debug=True)
