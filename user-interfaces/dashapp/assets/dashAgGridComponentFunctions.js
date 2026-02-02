@@ -32,7 +32,7 @@ dagcomponentfuncs.ButtonHeader = function (props) {
 dagcomponentfuncs.HeaderClickable = function (props){
     const onClick = () => {
         if (props.enableCallback){
-            winsow.alert("Clicked!");
+            window.alert("Clicked!");
             props.setValue({
                headerClicked: props.displayName,
                timestamp: new Date().toISOString() 
