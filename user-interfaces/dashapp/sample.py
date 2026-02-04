@@ -76,8 +76,11 @@ def update_graph(column_chosen):
     return fig
 
 
-@callback(Output("clicked-output", "children"), Input("test-grid-001", "columnState"))
+@callback(
+    Output("clicked-output", "children"), Input("test-grid-001", "virtualRowData")
+)
 def display_header_click(clicked_column):
+    print("Clicked!!!")
     if clicked_column:
         return f"Header Clicked: {clicked_column}"
     return "Click a header"

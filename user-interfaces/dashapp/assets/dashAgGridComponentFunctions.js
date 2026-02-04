@@ -1,5 +1,20 @@
 var dagcomponentfuncs  = (window.dashAgGridComponentFunctions = window.dashAgGridComponentFunctions ||{});
 
+dagcomponentfuncs.HeaderClickable2 = function (props) {
+    return React.createElement(
+        'div',
+        {
+            onClick: () => {
+            window.alert("Clicked!");
+            props.api.gridOptionsService.gridOptions.onCellClicked({value: {'headerClicked': props.column.colId},
+            column: props.column.colId,
+            rowIndex: null, node: []})},
+            className: props.className,
+            style: props.style,
+        },
+        props.displayName)
+}
+
 dagcomponentfuncs.ButtonHeader = function (props) {
     return React.createElement(
         'button',
