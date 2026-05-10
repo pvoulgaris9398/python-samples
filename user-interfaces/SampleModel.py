@@ -1,9 +1,4 @@
-from PyQt6.QtCore import (  # noqa: F401
-    QAbstractTableModel,
-    QModelIndex,
-    Qt,
-    pyqtSignal,
-)
+from PyQt6.QtCore import QAbstractTableModel, QModelIndex, Qt  # noqa: F401
 
 
 class SampleModel(QAbstractTableModel):
