@@ -1,8 +1,10 @@
-from Backend import Backend
+import sys
 
-# from ChatDelegate import ChatDelegate
+from Backend import Backend
+from ChatDelegateEx import ChatDelegateEx
 from ChatView import ChatView
 from LargeChatModelEx import LargeChatModelEx
+from MainWindow import MainWindow
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QApplication
 
@@ -15,8 +17,10 @@ model = LargeChatModelEx(backend, font)
 
 view = ChatView()
 view.setModel(model)
-# view.setItemDelegate(ChatDelegate())
+view.setItemDelegate(ChatDelegateEx())
 
-view.show()
+window = MainWindow("", view)
 
-app.exec()
+window.show()
+
+sys.exit(app.exec())
