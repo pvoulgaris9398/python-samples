@@ -1,14 +1,15 @@
-from PyQt6.QtCore import (  # noqa: F401
-    QAbstractTableModel,
-    QModelIndex,
-    Qt,
-    pyqtSignal,
-)
+from PyQt6.QtCore import QAbstractTableModel, QModelIndex, Qt  # noqa: F401
 
 
 class SampleModel(QAbstractTableModel):
     def __init__(self, parent=None):
         QAbstractTableModel.__init__(self, parent)
+
+    def flags(self, index: QModelIndex) -> Qt.ItemFlag:
+        if not index.isValid():
+            return Qt.ItemFlag.NoItemFlags
+        else:
+            return Qt.ItemFlag.ItemIsEditable
 
     def rowCount(self, parent=QModelIndex()) -> int:
         # print(parent)
@@ -53,6 +54,8 @@ class SampleModel(QAbstractTableModel):
         self, section: int, orientation: Qt.Orientation, role=Qt.ItemDataRole
     ):
         if role == Qt.ItemDataRole.DisplayRole:
+            if orientation == Qt.Orientation.Vertical:
+                return f"Row: {section}"
             if orientation == Qt.Orientation.Horizontal:
                 match section:
                     case 0:

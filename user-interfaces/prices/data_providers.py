@@ -1,5 +1,6 @@
-import connections
 import pandas as pd
+
+from . import connections
 
 """
 To Do:

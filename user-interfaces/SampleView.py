@@ -2,8 +2,16 @@ from __future__ import annotations
 
 import sys
 
+import DataFrameModel as models
+import prices.data_providers as dp
 import SampleModel
-from PyQt6.QtWidgets import QApplication, QTableView
+from PyQt6.QtWidgets import (
+    QApplication,
+    QDockWidget,
+    QMainWindow,
+    QTableView,
+    QTabWidget,
+)
 
 
 def create_view_model():
@@ -12,10 +20,7 @@ def create_view_model():
 
 def create_view(model):
     view = QTableView()
-    view.setWindowTitle("Sample View")
-    view.setSizePolicy(
-        view.sizePolicy().horizontalPolicy(), view.sizePolicy().verticalPolicy()
-    )
+
     view.setAlternatingRowColors(True)
     view.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
     view.resize(1000, 600)
@@ -30,8 +35,24 @@ if __name__ == "__main__":
 
     app = QApplication(sys.argv)
 
-    model = create_view_model()
-    view = create_view(model)
+    dockView = QDockWidget("Dockable Tabs")
 
-    view.show()
+    tabs = QTabWidget()
+    tabs.addTab(create_view(create_view_model()), "Sample # 3")
+    tabs.addTab(create_view(models.DataFrameModel(dp.get_prices())), "Sample # 2")
+    tabs.addTab(create_view(create_view_model()), "Sample # 3")
+
+    dockView.setWidget(tabs)
+
+    mainWindow = QMainWindow()
+    mainWindow.setWindowTitle("Sample View")
+    mainWindow.setSizePolicy(
+        mainWindow.sizePolicy().horizontalPolicy(),
+        mainWindow.sizePolicy().verticalPolicy(),
+    )
+    mainWindow.resize(1000, 600)
+
+    mainWindow.setCentralWidget(dockView)
+
+    mainWindow.show()
     app.exec()
