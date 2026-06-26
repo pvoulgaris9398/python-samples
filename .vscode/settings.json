@@ -37,5 +37,6 @@
   "editor.minimap.autohide": "mouseover",
   "python.REPL.enableREPLSmartSend": false,
   "python-envs.defaultEnvManager": "ms-python.python:conda",
-  "python-envs.defaultPackageManager": "ms-python.python:conda"
+  "python-envs.defaultPackageManager": "ms-python.python:conda",
+  "python.analysis.typeCheckingMode": "strict"
 }
