@@ -7,6 +7,7 @@
     "ms-python.python",
     "nparamonov.cold-python-theme",
     "esbenp.prettier-vscode",
-    "tamasfe.even-better-toml"
+    "tamasfe.even-better-toml",
+    "ms-azuretools.vscode-containers"
   ]
 }
