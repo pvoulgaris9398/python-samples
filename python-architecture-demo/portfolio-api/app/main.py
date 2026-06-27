@@ -8,7 +8,7 @@ from app.infrastructure.logging import configure_logging
 
 configure_logging()
 
-logger = structlog.get_logger()
+logger = structlog.get_logger()  # type: ignore
 
 
 @asynccontextmanager
