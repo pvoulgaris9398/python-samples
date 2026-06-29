@@ -37,8 +37,8 @@ def build_synthetic_returns(seed: int = 42) -> tuple[list[float], list[float]]:
     rng = random.Random(seed)
     market_factor = [rng.gauss(0.0004, 0.012) for _ in range(250)]
 
-    asset1 = []
-    asset2 = []
+    asset1: list[float] = []
+    asset2: list[float] = []
     for i, factor in enumerate(market_factor):
         shock1 = rng.gauss(0.0, 0.011)
         shock2 = rng.gauss(0.0, 0.011)
@@ -136,16 +136,16 @@ def main() -> None:
     print("Notes for review")
     print("- VaR is a loss estimate at a chosen confidence level and horizon.")
     print(
-        "- Parametric VaR assumes returns are roughly normal and can understate tail risk."
+        "- Parametric VaR assumes returns are roughly normal and can understate tail risk."  # noqa: E501
     )
     print(
-        "- Historical VaR uses observed returns and is simple, but it is sensitive to the sample history."
+        "- Historical VaR uses observed returns and is simple, but it is sensitive to the sample history."  # noqa: E501
     )
     print(
-        "- Expected Shortfall is often more informative because it looks at the average loss beyond the VaR cut-off."
+        "- Expected Shortfall is often more informative because it looks at the average loss beyond the VaR cut-off."  # noqa: E501
     )
     print(
-        "- In practice, portfolio risk also depends on correlations, time horizon, liquidity, and stress scenarios."
+        "- In practice, portfolio risk also depends on correlations, time horizon, liquidity, and stress scenarios."  # noqa: E501
     )
 
 
