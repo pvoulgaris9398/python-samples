@@ -12,8 +12,12 @@ inspect how assumptions and sample behavior affect the risk estimate.
 from __future__ import annotations
 
 import math
-import random
 from statistics import NormalDist, mean, pstdev
+
+try:
+    from synthetic_returns import build_synthetic_returns
+except ModuleNotFoundError:  # pragma: no cover - fallback for repo-root execution
+    from quant.synthetic_returns import build_synthetic_returns
 
 
 def percentile(values: list[float], p: float) -> float:
@@ -30,31 +34,6 @@ def percentile(values: list[float], p: float) -> float:
         return ordered[lower]
     weight = rank - lower
     return ordered[lower] + (ordered[upper] - ordered[lower]) * weight
-
-
-def build_synthetic_returns(num_assets: int = 100, seed: int = 42) -> list[list[float]]:
-    """Create a matrix of synthetic asset return series for demonstration."""
-    if num_assets <= 0:
-        raise ValueError("num_assets must be positive")
-
-    rng = random.Random(seed)
-    market_factor = [rng.gauss(0.0004, 0.012) for _ in range(250)]
-    asset_returns: list[list[float]] = []
-
-    for asset_index in range(num_assets):
-        beta = rng.uniform(0.35, 1.2)
-        idiosyncratic_vol = rng.uniform(0.008, 0.018)
-        series: list[float] = []
-        for day_index, factor in enumerate(market_factor):
-            shock = rng.gauss(0.0, idiosyncratic_vol)
-            # Add a few stressed days to make tail risk visible.
-            if day_index in {20, 84, 140, 207}:
-                shock -= rng.uniform(0.02, 0.04) * (1.0 if asset_index % 2 else 0.7)
-            series.append(beta * factor + shock)
-
-        asset_returns.append(series)
-
-    return asset_returns
 
 
 def portfolio_returns(
@@ -125,17 +104,26 @@ def expected_shortfall(
 def main() -> None:
     portfolio_value = 100_000.0
     num_assets = 100
+    days = 250
     confidence_levels = (0.95, 0.99)
 
     weights = [1.0 / num_assets for _ in range(num_assets)]
-    asset_returns = build_synthetic_returns(num_assets=num_assets, seed=42)
+    asset_returns = build_synthetic_returns(
+        num_assets=num_assets,
+        days=days,
+        seed=42,
+        market_mean=0.0004,
+        market_vol=0.012,
+        beta_range=(0.35, 1.2),
+        idiosyncratic_vol_range=(0.008, 0.018),
+    )
     portfolio = portfolio_returns(asset_returns, weights)
 
     print("Simple VaR example for a 100-asset portfolio")
     print("=" * 44)
     print(f"Portfolio value: ${portfolio_value:,.0f}")
     print(f"Number of assets: {num_assets}")
-    print(f"Equal-weighted portfolio")
+    print("Equal-weighted portfolio")
     print(f"Average daily portfolio return: {mean(portfolio):.2%}")
     print(f"Daily volatility: {pstdev(portfolio):.2%}")
     print()
