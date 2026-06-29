@@ -2,6 +2,10 @@
 
 - Note, run `conda activate {environment-name1}` prior to running `vscode`
 
+## Quantitative Investment Nodes
+
+- See [Notes](https://raw.githubusercontent.com/pvoulgaris9398/documents/refs/heads/main/technology/portfolio-optimization/quantitative-investing-notes.md?token=GHSAT0AAAAAAD4VR4VL3FV7Z66HHXWOTT7U2SBYCWA) here
+
 ## Sub-Folder/Project: `data-analysis`
 
 ### `Sunday, 1/18/2026`
