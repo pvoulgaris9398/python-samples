@@ -5,7 +5,7 @@ This script illustrates three common ways to think about portfolio risk:
 2. Historical VaR (empirical distribution)
 3. Expected Shortfall / CVaR (tail risk beyond VaR)
 
-It uses a toy two-asset portfolio with synthetic daily returns so you can
+It uses a toy 100-asset portfolio with synthetic daily returns so you can
 inspect how assumptions and sample behavior affect the risk estimate.
 """
 
@@ -32,32 +32,48 @@ def percentile(values: list[float], p: float) -> float:
     return ordered[lower] + (ordered[upper] - ordered[lower]) * weight
 
 
-def build_synthetic_returns(seed: int = 42) -> tuple[list[float], list[float]]:
-    """Create two correlated asset return series for demonstration."""
+def build_synthetic_returns(num_assets: int = 100, seed: int = 42) -> list[list[float]]:
+    """Create a matrix of synthetic asset return series for demonstration."""
+    if num_assets <= 0:
+        raise ValueError("num_assets must be positive")
+
     rng = random.Random(seed)
     market_factor = [rng.gauss(0.0004, 0.012) for _ in range(250)]
+    asset_returns: list[list[float]] = []
 
-    asset1: list[float] = []
-    asset2: list[float] = []
-    for i, factor in enumerate(market_factor):
-        shock1 = rng.gauss(0.0, 0.011)
-        shock2 = rng.gauss(0.0, 0.011)
-        # Add a few stressed days to make tail risk visible.
-        if i in {20, 84, 140, 207}:
-            shock1 -= 0.035
-            shock2 -= 0.028
-        asset1.append(0.7 * factor + shock1)
-        asset2.append(0.5 * factor + shock2)
+    for asset_index in range(num_assets):
+        beta = rng.uniform(0.35, 1.2)
+        idiosyncratic_vol = rng.uniform(0.008, 0.018)
+        series: list[float] = []
+        for day_index, factor in enumerate(market_factor):
+            shock = rng.gauss(0.0, idiosyncratic_vol)
+            # Add a few stressed days to make tail risk visible.
+            if day_index in {20, 84, 140, 207}:
+                shock -= rng.uniform(0.02, 0.04) * (1.0 if asset_index % 2 else 0.7)
+            series.append(beta * factor + shock)
 
-    return asset1, asset2
+        asset_returns.append(series)
+
+    return asset_returns
 
 
 def portfolio_returns(
-    asset1: list[float], asset2: list[float], weights: tuple[float, float]
+    asset_returns: list[list[float]], weights: list[float]
 ) -> list[float]:
-    """Combine asset returns into a portfolio return series."""
-    w1, w2 = weights
-    return [w1 * r1 + w2 * r2 for r1, r2 in zip(asset1, asset2)]
+    """Combine multiple asset return series into a portfolio return series."""
+    if not asset_returns:
+        raise ValueError("asset_returns cannot be empty")
+    if len(asset_returns) != len(weights):
+        raise ValueError("weights must match the number of assets")
+
+    num_days = len(asset_returns[0])
+    return [
+        sum(
+            weights[asset_index] * asset_returns[asset_index][day_index]
+            for asset_index in range(len(weights))
+        )
+        for day_index in range(num_days)
+    ]
 
 
 def parametric_var(
@@ -108,16 +124,18 @@ def expected_shortfall(
 
 def main() -> None:
     portfolio_value = 100_000.0
-    weights = (0.6, 0.4)
+    num_assets = 100
     confidence_levels = (0.95, 0.99)
 
-    asset1, asset2 = build_synthetic_returns(seed=42)
-    portfolio = portfolio_returns(asset1, asset2, weights)
+    weights = [1.0 / num_assets for _ in range(num_assets)]
+    asset_returns = build_synthetic_returns(num_assets=num_assets, seed=42)
+    portfolio = portfolio_returns(asset_returns, weights)
 
-    print("Simple VaR example for a 2-asset portfolio")
+    print("Simple VaR example for a 100-asset portfolio")
     print("=" * 44)
     print(f"Portfolio value: ${portfolio_value:,.0f}")
-    print(f"Weights: stock A={weights[0]:.0%}, stock B={weights[1]:.0%}")
+    print(f"Number of assets: {num_assets}")
+    print(f"Equal-weighted portfolio")
     print(f"Average daily portfolio return: {mean(portfolio):.2%}")
     print(f"Daily volatility: {pstdev(portfolio):.2%}")
     print()
