@@ -12,7 +12,13 @@ inspect how assumptions and sample behavior affect the risk estimate.
 from __future__ import annotations
 
 import math
+from pathlib import Path
 from statistics import NormalDist, mean, pstdev
+
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 try:
     from synthetic_returns import build_synthetic_returns
@@ -101,6 +107,31 @@ def expected_shortfall(
     return max(0.0, -(avg_tail * math.sqrt(horizon_days)) * portfolio_value)
 
 
+def rolling_historical_var(
+    returns: list[float],
+    confidence: float,
+    portfolio_value: float,
+    window: int = 30,
+    horizon_days: int = 1,
+) -> list[float]:
+    """Compute a rolling historical VaR series for a return series."""
+    if window <= 0:
+        raise ValueError("window must be positive")
+
+    rolling_values: list[float] = []
+    for index in range(len(returns)):
+        window_returns = returns[max(0, index - window + 1) : index + 1]
+        if len(window_returns) < 2:
+            rolling_values.append(float("nan"))
+        else:
+            rolling_values.append(
+                historical_var(
+                    window_returns, confidence, portfolio_value, horizon_days
+                )
+            )
+    return rolling_values
+
+
 def main() -> None:
     portfolio_value = 100_000.0
     num_assets = 100
@@ -139,6 +170,48 @@ def main() -> None:
         print(f"  Expected Shortfall: ${cvar:,.2f}")
         print()
 
+    histogram_path = Path(__file__).resolve().parent / "var_return_histogram.png"
+    fig, ax = plt.subplots(figsize=(8, 4))  # type: ignore
+    ax.hist(portfolio, bins=30, alpha=0.8, color="steelblue", edgecolor="black")  # type: ignore
+    ax.axvline(  # type: ignore
+        percentile(portfolio, 1 - confidence_levels[0]),
+        color="crimson",
+        linestyle="--",
+        label=f"{confidence_levels[0]:.0%} historical VaR threshold",
+    )
+    ax.set_title("Distribution of Daily Portfolio Returns")  # type: ignore
+    ax.set_xlabel("Daily Return")  # type: ignore
+    ax.set_ylabel("Frequency")  # type: ignore
+    ax.grid(alpha=0.25)  # type: ignore
+    ax.legend()  # type: ignore
+    fig.tight_layout()
+    fig.savefig(histogram_path, dpi=200)  # type: ignore
+    plt.close(fig)
+    print(f"Saved return histogram to {histogram_path}")
+
+    rolling_window = 30
+    rolling_var_values = rolling_historical_var(
+        portfolio,
+        confidence=0.95,
+        portfolio_value=portfolio_value,
+        window=rolling_window,
+    )
+    rolling_path = Path(__file__).resolve().parent / "rolling_var.png"
+    fig, ax = plt.subplots(figsize=(8, 4))  # type: ignore
+    ax.plot(  # type: ignore
+        range(1, len(portfolio) + 1), rolling_var_values, color="crimson", linewidth=1.5
+    )
+    ax.set_title(f"Rolling {rolling_window}-Day Historical VaR at 95% Confidence")  # type: ignore
+    ax.set_xlabel("Day")  # type: ignore
+    ax.set_ylabel("VaR ($)")  # type: ignore
+    ax.set_ylim(bottom=0)
+    ax.grid(alpha=0.25)  # type: ignore
+    fig.tight_layout()
+    fig.savefig(rolling_path, dpi=200)  # type: ignore
+    plt.close(fig)
+    print(f"Saved rolling VaR chart to {rolling_path}")
+
+    print()
     print("Notes for review")
     print("- VaR is a loss estimate at a chosen confidence level and horizon.")
     print(
