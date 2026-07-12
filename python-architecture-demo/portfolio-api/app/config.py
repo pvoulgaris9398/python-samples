@@ -1,8 +1,12 @@
+from typing import Any
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
     app_name: str = "portfolio-api"
+
+    def __init__(self, **values: Any) -> None:
+        super().__init__(**values)
 
     postgres_host: str
     postgres_port: int
@@ -23,6 +27,9 @@ class Settings(BaseSettings):
             f"{self.postgres_port}/"
             f"{self.postgres_db}"
         )
+
+    class Config:
+        env_file = ".env"
 
 
 settings = Settings()
