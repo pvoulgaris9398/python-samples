@@ -11,7 +11,9 @@ from app.features.portfolios.routes import router as portfolios_router
 from app.features.users.routes import router as users_router
 from app.infrastructure.database import engine
 from app.infrastructure.logging import configure_logging
-from app.infrastructure.tracing import configure_tracing
+
+# TODO: Fix invalid or bad imports in the tracing module
+from app.infrastructure.tracing import configure_tracing, get_trace_ids
 
 configure_logging()
 
@@ -38,7 +40,12 @@ async def log_http_requests(
     call_next: Callable[[Request], Awaitable[Response]],
 ) -> Response:
     request_id = str(uuid4())
-    request_logger = logger.bind(request_id=request_id)
+    trace_id, span_id = get_trace_ids()
+    request_logger = logger.bind(
+        request_id=request_id,
+        trace_id=trace_id,
+        span_id=span_id,
+    )
     request_logger.info("http.request.start", method=request.method, path=request.url.path)
 
     start = time.monotonic()
@@ -57,6 +64,11 @@ async def log_http_requests(
 
     elapsed_ms = round((time.monotonic() - start) * 1000, 2)
     response.headers["X-Request-ID"] = request_id
+    if trace_id is not None:
+        response.headers["X-Trace-ID"] = trace_id
+    if span_id is not None:
+        response.headers["X-Span-ID"] = span_id
+
     request_logger.info(
         "http.request.complete",
         method=request.method,
