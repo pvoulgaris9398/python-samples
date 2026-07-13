@@ -1,13 +1,12 @@
 from uuid import uuid4
 
-from app.application.portfolios.create.command import (
-    CreatePortfolioCommand,
-)
-from app.application.portfolios.create.response import (
+from ..entities.portfolio import Portfolio
+from ..portfolio_repository import PortfolioRepository
+from .commands import (
+    # CreatePortfolioRequest, # TODO: Fix this if needed
+    CreatePortfolioRequest,
     CreatePortfolioResponse,
 )
-from app.domain.portfolio.entity import Portfolio
-from app.domain.portfolio.repository import PortfolioRepository
 
 
 class CreatePortfolioHandler:
@@ -23,7 +22,7 @@ class CreatePortfolioHandler:
 
     async def handle(
         self,
-        command: CreatePortfolioCommand,
+        command: CreatePortfolioRequest,
     ) -> CreatePortfolioResponse:
         portfolio = Portfolio(
             id=uuid4(),
@@ -33,6 +32,6 @@ class CreatePortfolioHandler:
         await self._repository.save(portfolio)
 
         return CreatePortfolioResponse(
-            id=portfolio.id,
+            id=uuid4(),
             name=portfolio.name,
         )

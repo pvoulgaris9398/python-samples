@@ -1,7 +1,14 @@
+from uuid import UUID
+
 from pydantic import BaseModel, Field
 
 
-class CreatePortfolioCommand(BaseModel):
+class CreatePortfolioResponse(BaseModel):
+    id: UUID
+    name: str
+
+
+class CreatePortfolioRequest(BaseModel):
     """
     Request object for the Create Portfolio use case.
     """

@@ -1,7 +1,7 @@
 from datetime import date
 from decimal import Decimal
 
-from .models import PortfolioModel
+from .models.portfolio import PortfolioModel
 
 
 def get_portfolio_list():

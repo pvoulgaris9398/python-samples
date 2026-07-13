@@ -3,6 +3,7 @@ from __future__ import annotations
 from decimal import Decimal
 from uuid import UUID, uuid4
 
+from infrastructure.database import Base
 from sqlalchemy import (
     ForeignKey,
     Numeric,
@@ -10,38 +11,12 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import (
-    DeclarativeBase,
     Mapped,
     mapped_column,
     relationship,
 )
 
-
-class Base(DeclarativeBase):
-    """Base class for all SQLAlchemy ORM models."""
-
-    pass
-
-
-class PortfolioModel(Base):
-    __tablename__ = "portfolio"
-
-    id: Mapped[UUID] = mapped_column(
-        PG_UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
-    )
-
-    name: Mapped[str] = mapped_column(
-        String(100),
-        nullable=False,
-    )
-
-    positions: Mapped[list["PositionModel"]] = relationship(
-        back_populates="portfolio",
-        cascade="all, delete-orphan",
-        lazy="selectin",
-    )
+from .portfolio import PortfolioModel
 
 
 class PositionModel(Base):
