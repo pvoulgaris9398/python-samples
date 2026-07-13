@@ -16,8 +16,8 @@ services:
 
     environment:
       POSTGRES_DB: portfolio
-      POSTGRES_USER: portfolio
-      POSTGRES_PASSWORD: portfolio
+      POSTGRES_USER: portfolio-user
+      POSTGRES_PASSWORD: super-dee-duper-2026!
 
     ports:
       - "5432:5432"

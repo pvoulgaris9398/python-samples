@@ -2,6 +2,8 @@ import logging
 
 import structlog
 
+from app.config import settings
+
 
 def configure_logging() -> None:
     structlog.configure(
@@ -11,4 +13,4 @@ def configure_logging() -> None:
         ]
     )
 
-    logging.basicConfig(level=logging.INFO, format="%(message)s")
+    logging.basicConfig(level=settings.log_level.upper(), format="%(message)s")
