@@ -6,7 +6,7 @@ COPY pyproject.toml .
 
 RUN pip install --upgrade pip
 
-RUN pip install --root-user-action=ignore .
+RUN pip install --root-user-action=ignore .[otel]
 
 COPY . .
 

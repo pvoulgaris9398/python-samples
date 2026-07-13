@@ -13,10 +13,8 @@ async def get_user_list():
     return list(services.get_user_list())
 
 
-@router.post("/", response_model=schemas.UserCreateResponse, status_code=201)
+@router.post("/", response_model=schemas.UserCreateResponse, status_code=200)
 async def create_user(user_data: schemas.UserCreateRequest, db: Session = Depends(get_session)):
-    # Route only handles HTTP layer, calls service for
-    # heavy lifting
     try:
         return services.create_user_login(db, user_data)
     except HTTPException as e:

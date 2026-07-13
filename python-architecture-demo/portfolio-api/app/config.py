@@ -1,4 +1,5 @@
 from typing import Any
+
 from pydantic_settings import BaseSettings
 
 
@@ -16,6 +17,9 @@ class Settings(BaseSettings):
     postgres_password: str
 
     log_level: str = "INFO"
+    otel_enabled: bool = False
+    otlp_endpoint: str = "http://localhost:4318/v1/traces"
+    otlp_insecure: bool = True
 
     @property
     def database_url(self) -> str:

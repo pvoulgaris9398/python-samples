@@ -5,7 +5,7 @@ from . import schemas, services
 router = APIRouter(prefix="/portfolios", tags=["Portfolios"])
 
 
-@router.get("/all", response_model=list[schemas.PortfolioResponse], status_code=201)
+@router.get("/all", response_model=list[schemas.PortfolioResponse], status_code=200)
 async def get_portfolio_list():
     return list(services.get_portfolio_list())
 
