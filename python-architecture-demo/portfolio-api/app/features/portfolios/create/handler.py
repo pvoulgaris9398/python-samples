@@ -2,11 +2,7 @@ from uuid import uuid4
 
 from ..entities.portfolio import Portfolio
 from ..portfolio_repository import PortfolioRepository
-from .commands import (
-    # CreatePortfolioRequest, # TODO: Fix this if needed
-    CreatePortfolioRequest,
-    CreatePortfolioResponse,
-)
+from .commands import CreatePortfolioRequest, CreatePortfolioResponse
 
 
 class CreatePortfolioHandler:
@@ -32,6 +28,6 @@ class CreatePortfolioHandler:
         await self._repository.save(portfolio)
 
         return CreatePortfolioResponse(
-            id=uuid4(),
+            id=portfolio.id,
             name=portfolio.name,
         )

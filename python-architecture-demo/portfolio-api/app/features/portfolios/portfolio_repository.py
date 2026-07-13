@@ -1,10 +1,10 @@
-from uuid import uuid4
+from uuid import UUID
 
-from entities.portfolio import Portfolio
 from fastapi import Depends
-from models.portfolio import PortfolioModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.features.portfolios.entities.portfolio import Portfolio
+from app.features.portfolios.models.portfolio import PortfolioModel
 from app.infrastructure.database import get_session
 
 
@@ -12,21 +12,14 @@ class PortfolioRepository:
     def __init__(self, db: AsyncSession = Depends(get_session)):
         self.db = db
 
-    async def save(self, portfolio: Portfolio):
-        model = PortfolioModel(id=portfolio.id, name=portfolio.name)
-
-        self.db.add(model)
-
+    async def save(self, portfolio: Portfolio) -> None:
+        portfolio_model = PortfolioModel(id=portfolio.id, name=portfolio.name)
+        self.db.add(portfolio_model)
         await self.db.commit()
 
-    async def get(self, id: int):
-        model = await self.db.get(PortfolioModel, id)
-
+    async def get(self, portfolio_id: UUID) -> Portfolio | None:
+        model = await self.db.get(PortfolioModel, portfolio_id)
         if model is None:
             return None
 
-        """
-        TODO: Update the "id" parameter in the model and database
-        to be a UUID or similar
-        """
-        return Portfolio(id=uuid4(), name=model.name)
+        return Portfolio(id=model.id, name=model.name)
