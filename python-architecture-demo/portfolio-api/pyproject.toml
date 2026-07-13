@@ -4,15 +4,13 @@ version = "0.1.0"
 requires-python = ">=3.12"
 
 dependencies = [
-    "fastapi",
-    "uvicorn[standard]",
+    "fastapi>=0.116.0",
+    "uvicorn[standard]>=0.23.0",
     "sqlalchemy>=2.0",
-    "asyncpg",
-    "psycopg2-binary>=2.9.12,<3.0.0",
-    "pydantic>=2",
-    "pydantic-settings",
-    "structlog",
-    "httpx",
+    "asyncpg>=0.27.0",
+    "pydantic>=2,<3",
+    "pydantic-settings>=2,<3",
+    "structlog>=24",
     "pydantic[email]"
 ]
 

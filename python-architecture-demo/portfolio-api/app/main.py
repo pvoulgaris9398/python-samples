@@ -1,9 +1,10 @@
 import time
 from contextlib import asynccontextmanager
+from typing import Awaitable, Callable
 from uuid import uuid4
 
 import structlog
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 
 from app.features.health.routes import router as health_router
 from app.features.portfolios.routes import router as portfolios_router
@@ -32,7 +33,10 @@ configure_tracing(app, engine)
 
 
 @app.middleware("http")
-async def log_http_requests(request: Request, call_next):
+async def log_http_requests(
+    request: Request,
+    call_next: Callable[[Request], Awaitable[Response]],
+) -> Response:
     request_id = str(uuid4())
     request_logger = logger.bind(request_id=request_id)
     request_logger.info("http.request.start", method=request.method, path=request.url.path)
