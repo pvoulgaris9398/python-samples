@@ -58,43 +58,51 @@ using (var scope = app.Services.CreateScope())
 // ----------------------------------------------------
 // 3. API Endpoints (Cache-Aside Pattern)
 // ----------------------------------------------------
-app.MapGet("/products/{id:int}", async (int id, IDistributedCache cache, AppDbContext db) =>
+app.MapGet("/products/{id:int}", async (
+    int id, 
+    IDistributedCache cache, 
+    AppDbContext db, 
+    DotnetApiGateway.Protos.InventoryService.InventoryServiceClient inventoryClient) =>
 {
-    // Start an explicit custom tracking span for our cache check operation
     using var activity = appSource.StartActivity("GetProductDetail");
     activity?.SetTag("product.id", id);
 
     string cacheKey = $"product:{id}";
-
-    // 1. Try to fetch from Redis Cache
     string? cachedJson = await cache.GetStringAsync(cacheKey);
+    Product? product;
 
     if (!string.IsNullOrEmpty(cachedJson))
     {
         activity?.SetTag("cache.hit", true);
-        var cachedProduct = JsonSerializer.Deserialize<Product>(cachedJson);
-        return Results.Ok(new { DataSource = "Redis Cache", Data = cachedProduct });
+        product = JsonSerializer.Deserialize<Product>(cachedJson);
+    }
+    else
+    {
+        activity?.SetTag("cache.hit", false);
+        product = await db.Products.FindAsync(id);
+        if (product is not null)
+        {
+            await cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(product), 
+                new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) });
+        }
     }
 
-    // 2. Cache Miss: Fetch from PostgreSQL Database
-    activity?.SetTag("cache.hit", false);
-    var product = await db.Products.FindAsync(id);
+    if (product is null) return Results.NotFound();
 
-    if (product is null)
-    {
-        return Results.NotFound(new { Message = $"Product {id} not found." });
-    }
+    // Chaining the request: Call Python FastAPI via gRPC
+    // Tracing context is automatically injected into the request metadata headers here
+    var stockResponse = await inventoryClient.CheckStockAsync(new DotnetApiGateway.Protos.StockRequest { ProductId = id });
 
-    // 3. Populate Redis Cache with a Time-To-Live (TTL) of 5 minutes
-    var cacheOptions = new DistributedCacheEntryOptions
-    {
-        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-    };
-    string freshJson = JsonSerializer.Serialize(product);
-    await cache.SetStringAsync(cacheKey, freshJson, cacheOptions);
-
-    return Results.Ok(new { DataSource = "PostgreSQL Database", Data = product });
+    return Results.Ok(new {
+        DataSource = !string.IsNullOrEmpty(cachedJson) ? "Redis Cache" : "PostgreSQL Database",
+        Data = product,
+        StockInfo = new {
+            Available = stockResponse.AvailableStock,
+            InStock = stockResponse.IsInStock
+        }
+    });
 });
+
 
 // Helper endpoint to populate seed data directly into PostgreSQL
 app.MapPost("/products/seed", async (AppDbContext db) =>

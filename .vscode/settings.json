@@ -11,6 +11,12 @@
   "python.languageServer": "Pylance",
   "workbench.iconTheme": "vs-seti",
   "workbench.productIconTheme": "Default",
+  "[csharp]": {
+    "editor.maxTokenizationLineLength": 2500,
+    "editor.inlineSuggest.suppressSuggestions": false,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "csharpier.csharpier-vscode"
+  },
   "[yaml]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[jsonc]": {
     "editor.quickSuggestions": {
