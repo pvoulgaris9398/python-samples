@@ -21,6 +21,13 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.InstanceName = "Catalog_";
 });
 
+// Configures the typed gRPC client to point to the Python backend port
+builder.Services.AddGrpcClient<DotnetApiGateway.Protos.InventoryService.InventoryServiceClient>(o =>
+{
+    o.Address = new Uri("http://localhost:50051");
+});
+
+
 // ----------------------------------------------------
 // 2. OpenTelemetry & Distributed Tracing Setup
 // ----------------------------------------------------
