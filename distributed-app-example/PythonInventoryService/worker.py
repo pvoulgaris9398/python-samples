@@ -7,6 +7,11 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.sdk.resources import Resource
 
+import os
+rabbit_host = os.getenv("ConnectionStrings__RabbitMQ", "localhost")
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_host))
+
+
 # Configure OpenTelemetry Tracing for Worker Process
 resource = Resource.create(attributes={"service.name": "PythonOrderWorker"})
 provider = TracerProvider(resource=resource)

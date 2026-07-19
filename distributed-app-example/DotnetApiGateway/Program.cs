@@ -7,6 +7,18 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using RabbitMQ.Client;
 
+var postgresConn = Environment.GetEnvironmentVariable("ConnectionStrings__PostgreSQL") 
+    ?? "Host=localhost;Port=5432;Database=db_ecommerce;Username=dev_user;Password=dev_password";
+
+var redisConn = Environment.GetEnvironmentVariable("ConnectionStrings__Redis") 
+    ?? "localhost:6379";
+
+var grpcUrl = Environment.GetEnvironmentVariable("ConnectionStrings__gRPCInventory") 
+    ?? "http://localhost:50051";
+
+var rabbitHost = Environment.GetEnvironmentVariable("ConnectionStrings__RabbitMQ") 
+    ?? "localhost";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Register RabbitMQ Connection as a Singleton

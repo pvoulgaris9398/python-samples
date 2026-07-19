@@ -92,3 +92,71 @@ services:
       - app-network
     depends_on:
       - jaeger
+
+  #----------------------
+  # CUSTOM APPLICATION RUNTIMES
+  #----------------------
+  python-grpc-inventory:
+    build: ./PythonInventoryService
+    container_name: app-python-grpc
+    command: python main.py
+    expose:
+      - "50051"
+    networks:
+      - app-network
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+    depends_on:
+      otel-collector:
+        condition: service_started
+    healthcheck:
+      # Simple container execution check, can be advanced to nc -z local mock probes
+      test: ["CMD-SHELL", "python -c 'import socket; s = socket.socket(); s.connect((\"127.0.0.1\", 50051))'"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  python-rabbitmq-worker:
+    build: ./PythonInventoryService
+    container_name: app-python-worker
+    command: python worker.py
+    networks:
+      - app-network
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      otel-collector:
+        condition: service_started      
+
+  dotnet-api-gateway:
+    build: ./DotnetApiGateway
+    container_name: app-dotnet-gateway
+    ports:
+      - "5242:8080" # Maps local development calls to inner .NET container port
+    networks:
+      - app-network
+    environment:
+      - ConnectionStrings__PostgreSQL=Host=postgres;Port=5432;Database=db_ecommerce;Username=dev_user;Password=dev_password
+      - ConnectionStrings__Redis=redis:6379
+      - ConnectionStrings__gRPCInventory=http://python-grpc-inventory:50051
+      - ConnectionStrings__RabbitMQ=rabbitmq
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      python-grpc-inventory:
+        condition: service_healthy   
+
+  typescript-dashboard:
+    build: ./DashboardClient
+    container_name: app-typescript-ui
+    ports:
+      - "5173:80"
+    networks:
+      - app-network
+    depends_on:
+      - dotnet-api-gateway     

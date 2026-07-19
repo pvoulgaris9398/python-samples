@@ -12,6 +12,10 @@ from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExport
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.instrumentation.grpc import GrpcInstrumentorServer
 
+import os
+otel_endpoint = os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4317")
+# Update processor target variable endpoint string parameter accordingly
+
 # Configure Tracing to route back to our local OTel Collector
 resource = Resource.create(attributes={"service.name": "PythonInventoryService"})
 provider = TracerProvider(resource=resource)
