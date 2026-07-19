@@ -11,6 +11,7 @@
   "python.languageServer": "Pylance",
   "workbench.iconTheme": "cold-python-dark-icon-theme",
   "workbench.productIconTheme": "Default",
+  "[yaml]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "[jsonc]": {
     "editor.quickSuggestions": {
       "strings": true

@@ -1,0 +1,94 @@
+name: microservices-sandbox
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data_v1:
+  redis_data:
+
+services:
+  #----------------------
+  # Databases & storage
+  #----------------------
+  postgres:
+    image: postgres:18-alpine
+    container_name: sandbox-postgres
+    environment:
+      POSTGRES_DB: db_ecommerce
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U dev_user -d db_ecommerce" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data_v1:/var/lib/postgresql
+
+  redis:
+    image: redis:8.8.0-alpine
+    container_name: sandbox-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  #----------------------
+  # Async message queues
+  #----------------------
+  rabbitmq:
+    image: rabbitmq:4.3.2-management-alpine
+    container_name: sandbox-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672" # AMQP Message Protocol port
+      - "15672:15672" # Management Web Dashboard Port 
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "check_running" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  #----------------------
+  # Async message queues
+  #----------------------
+  jaeger:
+    image: jaegertracing/jaeger:2.19.0
+    container_name: sandbox-jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686" # Jaeger Web UI Dashboard
+    networks:
+      - app-network
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.156.0
+    container_name: sandbox-otel-collector
+    command: [ "--config=/etc/otel-collector-config.yaml" ]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "4317:4317" # OTLP gRPC receiver endpoint
+      - "4318:4318" # OTLP HTTP receiver endpoint
+    networks:
+      - app-network
+    depends_on:
+      - jaeger
