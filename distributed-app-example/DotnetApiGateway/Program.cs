@@ -56,7 +56,18 @@ builder.Services.AddOpenTelemetry()
             options.Endpoint = new Uri("http://localhost:4317"); // Targets your OTel Collector
         }));
 
+// Allow any origin, method, and header for testing purposes
+builder.Services.AddCors(options => {
+    options.AddDefaultPolicy(policy => policy
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader());
+});
+
 var app = builder.Build();
+
+// Make sure to add the middleware right before map endpoints
+app.UseCors();
 
 // Auto-apply database schema migrations on startup
 using (var scope = app.Services.CreateScope())
