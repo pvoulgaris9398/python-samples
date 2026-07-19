@@ -5,8 +5,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Register RabbitMQ Connection as a Singleton
+builder.Services.AddSingleton<IConnectionFactory>(sp => new ConnectionFactory
+{
+    HostName = "localhost",
+    Port = 5672,
+    UserName = "guest",
+    Password = "guest"
+});
 
 // ----------------------------------------------------
 // 1. Storage & Caching Configurations
@@ -120,6 +130,40 @@ app.MapPost("/products/seed", async (AppDbContext db) =>
     return Results.Ok("Database already contains data.");
 });
 
+app.MapPost("/checkout", async (CheckoutRequest request, IConnectionFactory factory) =>
+{
+    // Custom tracing tracking span
+    using var activity = appSource.StartActivity("PublishOrderEvent");
+    activity?.SetTag("checkout.product_id", request.ProductId);
+
+    // Establish connection to local RabbitMQ container
+    using var connection = await factory.CreateConnectionAsync();
+    using var channel = await connection.CreateChannelAsync();
+
+    // Declare a durable topic exchange
+    string exchangeName = "order_exchange";
+    await channel.ExchangeDeclareAsync(exchange:exchangeName, type: ExchangeType.Topic, durable: true);
+
+    // Create message payload
+    var orderEvent = new { OrderId = Guid.NewGuid(), request.ProductId, Quantity = request.Quantity, Timestamp = DateTime.UtcNow };
+    var messageBody = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(orderEvent);
+
+    // Set up basic delivery properties
+    var props = new BasicProperties { DeliveryMode = DeliveryModes.Persistent };
+
+    // Publish message asynchronously to the exchange
+    await channel.BasicPublishAsync(
+        exchange: exchangeName,
+        routingKey: "order.placed",
+        mandatory: true,
+        basicProperties: props,
+        body: messageBody
+    );
+
+    activity?.SetTag("order.id", orderEvent.OrderId);
+    return Results.Accepted(value: new { Status = "Order Submitted Asynchronously", OrderId = orderEvent.OrderId });
+});
+
 app.Run();
 
 // ----------------------------------------------------
@@ -137,3 +181,6 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
     public DbSet<Product> Products => Set<Product>();
 }
+
+// Data Model Record
+public record CheckoutRequest(int ProductId, int Quantity);
