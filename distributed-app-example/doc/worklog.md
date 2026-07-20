@@ -6,6 +6,12 @@ date: 7/19/2026
 
 ## `Sunday, 7/19/2026`
 
+- Made a lot of progress on this `polyglot` sample
+- TODO: Make sure configurable elements are passed-in as environment variables, logging is correctly setup and it fully works end-to-end
+- TODO: Add `grafana` and `prometheus`
+- TODO: Add rate-limiting with `nginx` proxy
+- TODO: Add ssl-termination
+
 ```bash
 
 curl -X POST http://localhost:5281/products/seed
