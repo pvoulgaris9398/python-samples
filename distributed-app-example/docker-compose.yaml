@@ -123,6 +123,7 @@ services:
     networks:
       - app-network
     environment:
+      - ConnectionStrings__RabbitMQ=rabbitmq
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
     depends_on:
       rabbitmq:

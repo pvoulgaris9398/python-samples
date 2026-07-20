@@ -9,13 +9,14 @@ from opentelemetry.sdk.resources import Resource
 
 import os
 rabbit_host = os.getenv("ConnectionStrings__RabbitMQ", "localhost")
+otel_endpoint = os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4317")
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_host))
 
 
 # Configure OpenTelemetry Tracing for Worker Process
 resource = Resource.create(attributes={"service.name": "PythonOrderWorker"})
 provider = TracerProvider(resource=resource)
-processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="http://localhost:4317", insecure=True))
+processor = BatchSpanProcessor(OTLPSpanExporter(endpoint=otel_endpoint, insecure=True))
 provider.add_span_processor(processor)
 trace.set_tracer_provider(provider)
 tracer = trace.get_tracer(__name__)
@@ -41,7 +42,7 @@ def process_order(ch, method, properties, body):
 
 def main():
     # Connect to RabbitMQ container
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbit_host))
     channel = connection.channel()
 
     # Match exchange layout declared in .NET application

@@ -19,7 +19,7 @@ otel_endpoint = os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4317"
 # Configure Tracing to route back to our local OTel Collector
 resource = Resource.create(attributes={"service.name": "PythonInventoryService"})
 provider = TracerProvider(resource=resource)
-processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="http://localhost:4317", insecure=True))
+processor = BatchSpanProcessor(OTLPSpanExporter(endpoint=otel_endpoint, insecure=True))
 provider.add_span_processor(processor)
 trace.set_tracer_provider(provider)
 
