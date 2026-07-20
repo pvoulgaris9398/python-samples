@@ -131,7 +131,9 @@ services:
         condition: service_started      
 
   dotnet-api-gateway:
-    build: ./DotnetApiGateway
+    build: 
+      context: .
+      dockerfile: DotnetApiGateway/Dockerfile
     container_name: app-dotnet-gateway
     ports:
       - "5242:8080" # Maps local development calls to inner .NET container port

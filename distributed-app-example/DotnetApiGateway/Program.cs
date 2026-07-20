@@ -33,8 +33,8 @@ builder.Services.AddSingleton<IConnectionFactory>(sp => new ConnectionFactory
 // ----------------------------------------------------
 // 1. Storage & Caching Configurations
 // ----------------------------------------------------
-var postgresConn = "Host=localhost;Port=5432;Database=ecom_db;Username=dev_user;Password=dev_password";
-var redisConn = "localhost:6379";
+// var postgresConn = "Host=localhost;Port=5432;Database=ecom_db;Username=dev_user;Password=dev_password";
+// var redisConn = "localhost:6379";
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(postgresConn));
 builder.Services.AddStackExchangeRedisCache(options =>
